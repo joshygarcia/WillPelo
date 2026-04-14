@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "Bash(curl -s -o /tmp/page.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3344/)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:3344/)",
+      "Read(//c/Users/mrjos/AppData/Local/Temp/**)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(rm -f /c/Users/mrjos/Documents/Github/WillPelo/components/DaysCounter.tsx /c/Users/mrjos/Documents/Github/WillPelo/components/StreakCard.tsx /c/Users/mrjos/Documents/Github/WillPelo/components/MatchList.tsx /c/Users/mrjos/Documents/Github/WillPelo/components/MatchRow.tsx /c/Users/mrjos/Documents/Github/WillPelo/components/HairPhoto.tsx)",
+      "Read(//c/Users/mrjos/Documents/Github/WillPelo/components//**)",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code} \\(%{size_download} bytes\\)\\\\n' http://localhost:27329__TRACKED_VAR__)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5492/)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5492/editorial)"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  color: #111;
+  background: #fff;
+}
+
+/* Each style page paints its own background; this is the default fallback. */
