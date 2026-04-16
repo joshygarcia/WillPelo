@@ -27,6 +27,9 @@ const SITE_URL = "https://www.willnosecortaelpelo.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  verification: {
+    google: "jzJFtcmF5qSa6v3qcospGCYePEx3HSwzVLi8lC2pNRc",
+  },
   title: {
     default: "El Pelo de Will — Reto Real Madrid | Los Futbolitos",
     template: "%s | El Pelo de Will",
