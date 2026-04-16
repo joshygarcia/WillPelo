@@ -21,11 +21,16 @@ function authorPicExists(): boolean {
   }
 }
 
+function daysSincePromise(): number {
+  return Math.max(0, Math.floor((Date.now() - PROMISE_DATE.getTime()) / 86_400_000));
+}
+
 export default async function HomePage() {
   const { matches, source, reason } = await fetchMatches();
   const streak = computeStreak(matches);
   const remaining = Math.max(0, STREAK_GOAL - streak);
   const hasAuthorPic = authorPicExists();
+  const days = daysSincePromise();
   const usingMock = source === "mock";
   const sourceLabel =
     source === "espn"
@@ -33,6 +38,27 @@ export default async function HomePage() {
       : source === "api-football"
         ? "DATOS EN VIVO · API-FOOTBALL"
         : "DATOS DE MUESTRA";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `¡Will lleva ${days} días sin cortarse el pelo! — Reto Real Madrid`,
+    description: `Will prometió no cortarse el pelo hasta que el Real Madrid gane 5 seguidas sin penalti. Lleva ${days} días. Racha actual: ${streak}/5.`,
+    url: "https://will-pelo.vercel.app",
+    inLanguage: "es",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "El Pelo de Will",
+      url: "https://will-pelo.vercel.app",
+    },
+    about: {
+      "@type": "SportsEvent",
+      name: "Reto del Pelo de Will — Real Madrid",
+      description:
+        "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid gane 5 partidos seguidos sin que les piten un penalti a favor.",
+      sport: "Fútbol",
+    },
+  };
 
   return (
     <div
@@ -42,6 +68,10 @@ export default async function HomePage() {
           "radial-gradient(ellipse at 50% 30%, #0A4A1E 0%, #031A08 45%, #000000 100%)",
       }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Halftone overlay */}
       <div
         aria-hidden

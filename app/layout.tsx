@@ -23,10 +23,70 @@ const blackOps = Black_Ops_One({
   display: "swap",
 });
 
+const SITE_URL = "https://will-pelo.vercel.app";
+
 export const metadata: Metadata = {
-  title: "El Pelo de Will — Reto Real Madrid",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "El Pelo de Will — Reto Real Madrid | Los Futbolitos",
+    template: "%s | El Pelo de Will",
+  },
   description:
-    "Cuenta los días que Will lleva sin cortarse el pelo a la espera de que el Real Madrid gane 5 partidos seguidos sin penalti a favor.",
+    "¿Cuántos días lleva Will sin cortarse el pelo? Sigue el reto en vivo: el Real Madrid debe ganar 5 partidos seguidos sin penalti a favor. Inspirado en Los Futbolitos.",
+  keywords: [
+    "Will pelo",
+    "Los Futbolitos",
+    "Real Madrid",
+    "reto pelo",
+    "Will no se corta el pelo",
+    "penalti Real Madrid",
+    "racha Real Madrid",
+    "Los Futbolitos reto",
+    "Will Los Futbolitos",
+    "futbol youtube",
+    "La Liga",
+    "Champions League",
+  ],
+  authors: [{ name: "@Josshygg", url: "https://www.instagram.com/josshygg/" }],
+  creator: "@Josshygg",
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: SITE_URL,
+    siteName: "El Pelo de Will",
+    title: "¡WILL NO SE CORTA EL PELO! — Reto Real Madrid",
+    description:
+      "Will prometió no cortarse el pelo hasta que el Real Madrid gane 5 seguidas sin penalti a favor. ¿Cuántos días lleva? ¡Míralo en vivo!",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "El Pelo de Will — Reto Real Madrid | Los Futbolitos",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "¡WILL NO SE CORTA EL PELO! — Reto Real Madrid",
+    description:
+      "Will prometió no cortarse el pelo hasta que el Real Madrid gane 5 seguidas sin penalti. ¿Cuántos días lleva?",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
 };
 
 export default function RootLayout({
