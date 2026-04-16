@@ -10,7 +10,7 @@ import type { Match } from "@/lib/types";
 
 export const revalidate = 3600;
 
-const REEL_URL = "https://www.instagram.com/reel/DW_vH_ZEf1A/";
+const REEL_URL = "https://www.instagram.com/reel/DXK2m6kEfMm/";
 const AUTHOR_PIC_PATH = "/josshygg.jpeg";
 
 function authorPicExists(): boolean {
