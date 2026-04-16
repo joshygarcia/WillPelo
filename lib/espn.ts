@@ -10,12 +10,18 @@ import { PROMISE_DATE, RM_TEAM_ID_ESPN } from "./constants";
  * - `summary` expone `keyEvents` con tipos `Penalty - Scored` / `Missed`
  *   / `Saved` por equipo, así podemos detectar penaltis pitados al Madrid.
  *
- * Solo usamos LaLiga (esp.1). Los partidos de Champions/Copa no se incluyen
- * aquí — si los necesitas habría que añadir `uefa.champions` y `esp.copa_del_rey`.
+ * Incluye: La Liga, Champions League y Copa del Rey.
  */
 
-const ESPN_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1";
+const ESPN_SOCCER = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const REVALIDATE_SECONDS = 60 * 60; // 1 hora
+
+/** Ligas de las que consultamos partidos del Real Madrid. */
+const LEAGUES: { slug: string; label: string }[] = [
+  { slug: "esp.1", label: "La Liga" },
+  { slug: "uefa.champions", label: "Champions League" },
+  { slug: "esp.copa_del_rey", label: "Copa del Rey" },
+];
 
 interface EspnScheduleResponse {
   events?: EspnScheduleEvent[];
@@ -120,42 +126,83 @@ function keyEventIsPenaltyForRM(ev: EspnKeyEvent): boolean {
   return typeText.startsWith("penalty");
 }
 
-async function wasPenaltyAwardedToRM(fixtureId: string): Promise<boolean> {
+async function wasPenaltyAwardedToRM(
+  leagueSlug: string,
+  fixtureId: string
+): Promise<boolean> {
   const summary = await espnFetch<EspnSummaryResponse>(
-    `${ESPN_BASE}/summary?event=${fixtureId}`
+    `${ESPN_SOCCER}/${leagueSlug}/summary?event=${fixtureId}`
   );
   if (!summary?.keyEvents) return false;
   return summary.keyEvents.some(keyEventIsPenaltyForRM);
 }
 
+/** Evento con la liga de la que proviene, para pasar a wasPenaltyAwardedToRM. */
+interface TaggedEvent {
+  event: EspnScheduleEvent;
+  leagueSlug: string;
+  leagueLabel: string;
+}
+
 /**
- * Devuelve los partidos de LaLiga del Real Madrid desde la fecha de la promesa,
- * anotando si hubo penalti a favor. Ordenados de más reciente a más antiguo.
+ * Devuelve los partidos del Real Madrid (La Liga + Champions + Copa) desde la
+ * fecha de la promesa, anotando si hubo penalti a favor.
+ * Ordenados de más reciente a más antiguo.
  */
 export async function fetchEspnMatchesSincePromise(
-  maxFixturesToAnnotate = 8
+  maxFixturesToAnnotate = 10
 ): Promise<Match[] | null> {
-  const schedule = await espnFetch<EspnScheduleResponse>(
-    `${ESPN_BASE}/teams/${RM_TEAM_ID_ESPN}/schedule`
+  // Fetch schedules from all leagues in parallel
+  const scheduleResults = await Promise.all(
+    LEAGUES.map(async (league) => {
+      const schedule = await espnFetch<EspnScheduleResponse>(
+        `${ESPN_SOCCER}/${league.slug}/teams/${RM_TEAM_ID_ESPN}/schedule`
+      );
+      return { league, events: schedule?.events ?? [] };
+    })
   );
-  if (!schedule?.events) return null;
+
+  // If ALL leagues failed (returned null → empty), treat as network error
+  const anySuccess = scheduleResults.some((r) => r.events.length > 0 || r.events !== undefined);
+  if (!anySuccess) return null;
 
   const sinceMs = PROMISE_DATE.getTime();
 
-  const completed = schedule.events
-    .filter((e) => {
-      const status = e.competitions?.[0]?.status?.type;
-      return status?.completed === true || status?.name === "STATUS_FULL_TIME";
-    })
-    .filter((e) => new Date(e.date).getTime() >= sinceMs)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Flatten, tag with league info, filter completed + after promise date
+  const allCompleted: TaggedEvent[] = [];
+  for (const { league, events } of scheduleResults) {
+    for (const ev of events) {
+      const status = ev.competitions?.[0]?.status?.type;
+      const isCompleted = status?.completed === true || status?.name === "STATUS_FULL_TIME";
+      if (!isCompleted) continue;
+      if (new Date(ev.date).getTime() < sinceMs) continue;
+      allCompleted.push({
+        event: ev,
+        leagueSlug: league.slug,
+        leagueLabel: league.label,
+      });
+    }
+  }
 
-  if (completed.length === 0) return [];
+  // Deduplicate by event ID (shouldn't happen, but just in case)
+  const seen = new Set<string>();
+  const unique = allCompleted.filter((t) => {
+    if (seen.has(t.event.id)) return false;
+    seen.add(t.event.id);
+    return true;
+  });
 
-  const toAnnotate = completed.slice(0, maxFixturesToAnnotate);
+  // Sort newest first
+  unique.sort(
+    (a, b) => new Date(b.event.date).getTime() - new Date(a.event.date).getTime()
+  );
+
+  if (unique.length === 0) return [];
+
+  const toAnnotate = unique.slice(0, maxFixturesToAnnotate);
 
   const annotated = await Promise.all(
-    toAnnotate.map(async (ev) => {
+    toAnnotate.map(async ({ event: ev, leagueSlug, leagueLabel }) => {
       const comp = ev.competitions?.[0];
       const competitors = comp?.competitors ?? [];
       const rm = competitors.find((c) => c.team?.id === String(RM_TEAM_ID_ESPN));
@@ -168,12 +215,12 @@ export async function fetchEspnMatchesSincePromise(
       if (goalsFor > goalsAgainst) result = "W";
       else if (goalsFor < goalsAgainst) result = "L";
 
-      const penalty = await wasPenaltyAwardedToRM(ev.id);
+      const penalty = await wasPenaltyAwardedToRM(leagueSlug, ev.id);
 
       const match: Match = {
         fixtureId: Number(ev.id),
         date: ev.date,
-        competition: "La Liga",
+        competition: leagueLabel,
         opponent: opp.team?.displayName || opp.team?.abbreviation || "???",
         opponentLogo: pickDefaultLogo(opp.team?.logos) ?? opp.team?.logo,
         homeAway: rm.homeAway === "home" ? "H" : "A",
