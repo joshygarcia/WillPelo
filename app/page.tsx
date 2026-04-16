@@ -52,11 +52,10 @@ export default async function HomePage() {
       url: "https://www.willnosecortaelpelo.com",
     },
     about: {
-      "@type": "SportsEvent",
+      "@type": "Thing",
       name: "Reto del Pelo de Will — Real Madrid",
       description:
         "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid gane 5 partidos seguidos sin que les piten un penalti a favor.",
-      sport: "Fútbol",
     },
   };
 
