@@ -154,7 +154,7 @@ export default function OGImage() {
               opacity: 0.7,
             }}
           >
-            Inspirado en Los Futbolitos · will-pelo.vercel.app
+            Inspirado en Los Futbolitos · willnosecortaelpelo.com
           </div>
         </div>
       </div>

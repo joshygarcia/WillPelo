@@ -44,12 +44,12 @@ export default async function HomePage() {
     "@type": "WebPage",
     name: `¡Will lleva ${days} días sin cortarse el pelo! — Reto Real Madrid`,
     description: `Will prometió no cortarse el pelo hasta que el Real Madrid gane 5 seguidas sin penalti. Lleva ${days} días. Racha actual: ${streak}/5.`,
-    url: "https://will-pelo.vercel.app",
+    url: "https://www.willnosecortaelpelo.com",
     inLanguage: "es",
     isPartOf: {
       "@type": "WebSite",
       name: "El Pelo de Will",
-      url: "https://will-pelo.vercel.app",
+      url: "https://www.willnosecortaelpelo.com",
     },
     about: {
       "@type": "SportsEvent",

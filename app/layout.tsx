@@ -23,7 +23,7 @@ const blackOps = Black_Ops_One({
   display: "swap",
 });
 
-const SITE_URL = "https://will-pelo.vercel.app";
+const SITE_URL = "https://www.willnosecortaelpelo.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

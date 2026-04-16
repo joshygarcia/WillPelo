@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://will-pelo.vercel.app/sitemap.xml",
+    sitemap: "https://www.willnosecortaelpelo.com/sitemap.xml",
   };
 }
