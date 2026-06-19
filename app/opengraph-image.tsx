@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "El Pelo de Will — Reto Real Madrid | Los Futbolitos";
+export const alt =
+  "Will abandona el reto del pelo en el día 128 y se tiñe de rubio | Los Futbolitos";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,8 +48,11 @@ export default function OGImage() {
           {/* Sticker */}
           <div
             style={{
-              background: "#B6FF5C",
-              color: "#000",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              background: "#D40000",
+              color: "#FFFFFF",
               padding: "8px 28px",
               borderRadius: "9999px",
               fontSize: "28px",
@@ -58,37 +62,46 @@ export default function OGImage() {
               transform: "rotate(-3deg)",
             }}
           >
-            ¡INCREÍBLE!
+            <div
+              style={{
+                width: "16px",
+                height: "16px",
+                borderRadius: "9999px",
+                background: "#FFFFFF",
+                border: "2px solid #000",
+              }}
+            />
+            ¡ÚLTIMA HORA!
           </div>
 
           {/* Headline */}
           <div
             style={{
-              fontSize: "96px",
+              fontSize: "78px",
               fontStyle: "italic",
               color: "#FFFFFF",
               textAlign: "center",
-              lineHeight: 0.85,
+              lineHeight: 0.9,
               WebkitTextStroke: "4px #000",
               textShadow: "8px 8px 0 #000",
               textTransform: "uppercase",
             }}
           >
-            ¡WILL NO SE
+            ¡WILL ABANDONA EL RETO!
           </div>
           <div
             style={{
-              fontSize: "96px",
+              fontSize: "60px",
               fontStyle: "italic",
-              color: "#FFFFFF",
+              color: "#FFD93D",
               textAlign: "center",
-              lineHeight: 0.85,
+              lineHeight: 0.9,
               WebkitTextStroke: "4px #000",
               textShadow: "8px 8px 0 #000",
               textTransform: "uppercase",
             }}
           >
-            CORTA EL PELO!
+            DÍA 128 · AHORA ES RUBIO
           </div>
 
           {/* Subtitle */}
@@ -112,7 +125,7 @@ export default function OGImage() {
                 boxShadow: "3px 3px 0 #000",
               }}
             >
-              REAL MADRID
+              DÍA 128
             </div>
             <div
               style={{
@@ -126,12 +139,12 @@ export default function OGImage() {
                 boxShadow: "3px 3px 0 #000",
               }}
             >
-              5 PARTIDOS SEGUIDOS
+              NUNCA SE CORTÓ
             </div>
             <div
               style={{
-                background: "#FFFFFF",
-                color: "#D40000",
+                background: "#FFD93D",
+                color: "#000",
                 padding: "6px 20px",
                 borderRadius: "8px",
                 fontSize: "24px",
@@ -140,7 +153,7 @@ export default function OGImage() {
                 boxShadow: "3px 3px 0 #000",
               }}
             >
-              SIN PENALTI
+              AHORA RUBIO
             </div>
           </div>
 

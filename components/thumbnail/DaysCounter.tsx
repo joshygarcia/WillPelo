@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 interface Props {
   promiseDateIso: string;
   fontSize?: string;
+  /**
+   * Si se pasa, el contador queda CONGELADO en este valor (el reto terminó)
+   * y no hace tick. Se usa para mostrar el récord final de días.
+   */
+  frozenDays?: number;
 }
 
 function calc(promiseMs: number): number {
@@ -14,16 +19,24 @@ function calc(promiseMs: number): number {
 export default function ThumbnailDaysCounter({
   promiseDateIso,
   fontSize = "clamp(8rem, 28vw, 22rem)",
+  frozenDays,
 }: Props) {
+  const isFrozen = typeof frozenDays === "number";
   const promiseMs = new Date(promiseDateIso).getTime();
-  const [days, setDays] = useState<number>(() => calc(promiseMs));
+  const [days, setDays] = useState<number>(() =>
+    isFrozen ? frozenDays! : calc(promiseMs)
+  );
 
   useEffect(() => {
+    if (isFrozen) {
+      setDays(frozenDays!);
+      return;
+    }
     const tick = () => setDays(calc(promiseMs));
     tick();
     const id = setInterval(tick, 60_000);
     return () => clearInterval(id);
-  }, [promiseMs]);
+  }, [promiseMs, isFrozen, frozenDays]);
 
   return (
     <span

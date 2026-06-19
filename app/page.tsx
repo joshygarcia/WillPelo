@@ -4,14 +4,24 @@ import Image from "next/image";
 import ThumbnailDaysCounter from "@/components/thumbnail/DaysCounter";
 import InstagramReel from "@/components/thumbnail/InstagramReel";
 import { fetchMatches } from "@/lib/matches";
-import { PROMISE_DATE, RM_LOGO_URL, STREAK_GOAL } from "@/lib/constants";
+import {
+  ABANDON_DATE,
+  FINAL_DAYS,
+  PROMISE_DATE,
+  RM_LOGO_URL,
+  STREAK_GOAL,
+} from "@/lib/constants";
 import { computeStreak } from "@/lib/streak";
 import type { Match } from "@/lib/types";
 
 export const revalidate = 3600;
 
-const REEL_URL = "https://www.instagram.com/p/DXicfYXDwc6/";
+// Nuevo reel: Will anuncia que se tiñó de rubio y abandona el reto.
+const REEL_URL = "https://www.instagram.com/p/DZWh9hkBNCM/";
 const AUTHOR_PIC_PATH = "/josshygg.jpeg";
+
+// Acento "rubio platino" que se cuela en la nueva narrativa.
+const BLONDE = "#FFD93D";
 
 function authorPicExists(): boolean {
   try {
@@ -21,16 +31,18 @@ function authorPicExists(): boolean {
   }
 }
 
-function daysSincePromise(): number {
-  return Math.max(0, Math.floor((Date.now() - PROMISE_DATE.getTime()) / 86_400_000));
-}
-
 export default async function HomePage() {
   const { matches, source, reason } = await fetchMatches();
-  const streak = computeStreak(matches);
-  const remaining = Math.max(0, STREAK_GOAL - streak);
+  // El reto se abandonó sin que el Madrid encadenara las 5 victorias.
+  // Los partidos son datos en vivo, así que topamos la racha mostrada por
+  // debajo del objetivo para que nunca contradiga el sello "NUNCA LLEGÓ A 5".
+  const displayStreak = Math.min(computeStreak(matches), STREAK_GOAL - 1);
   const hasAuthorPic = authorPicExists();
-  const days = daysSincePromise();
+  const days = FINAL_DAYS;
+  const daysRubio = Math.max(
+    0,
+    Math.floor((Date.now() - ABANDON_DATE.getTime()) / 86_400_000)
+  );
   const usingMock = source === "mock";
   const sourceLabel =
     source === "espn"
@@ -42,8 +54,8 @@ export default async function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: `¡Will lleva ${days} días sin cortarse el pelo! — Reto Real Madrid`,
-    description: `Will prometió no cortarse el pelo hasta que el Real Madrid gane 5 seguidas sin penalti. Lleva ${days} días. Racha actual: ${streak}/5.`,
+    name: `Will abandona el reto del pelo en el día ${days} y se tiñe de rubio`,
+    description: `Tras ${days} días sin cortarse el pelo, Will de Los Futbolitos abandonó el reto y se tiñó de rubio por otra apuesta. La condición del Real Madrid (5 victorias seguidas sin penalti a favor) nunca llegó a cumplirse.`,
     url: "https://www.willnosecortaelpelo.com",
     inLanguage: "es",
     isPartOf: {
@@ -53,9 +65,9 @@ export default async function HomePage() {
     },
     about: {
       "@type": "Thing",
-      name: "Reto del Pelo de Will — Real Madrid",
+      name: "Reto del Pelo de Will — Real Madrid (abandonado)",
       description:
-        "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid gane 5 partidos seguidos sin que les piten un penalti a favor.",
+        "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid ganara 5 partidos seguidos sin penalti a favor. Se rindió en el día 128 y, en vez de cortárselo, se tiñó de rubio por otra apuesta.",
     },
   };
 
@@ -233,25 +245,25 @@ export default async function HomePage() {
                 <div
                   className="relative rounded-3xl overflow-hidden border-[6px]"
                   style={{
-                    borderColor: "#7CFC4D",
+                    borderColor: BLONDE,
                     borderStyle: "dashed",
-                    background: "#061812",
+                    background: "#1a1405",
                     padding: "10px",
                   }}
                 >
                   <InstagramReel url={REEL_URL} />
                 </div>
-                {/* "MIRA EL VIDEO" sticker */}
+                {/* "EL RUBIAZO" sticker */}
                 <span
                   className="absolute -top-5 left-4 font-display italic text-base md:text-lg px-3 py-1 rounded-full border-4 border-black z-30"
                   style={{
-                    background: "#B6FF5C",
+                    background: BLONDE,
                     color: "#000",
                     transform: "rotate(-6deg)",
                     boxShadow: "4px 4px 0 #000",
                   }}
                 >
-                  ▶ MIRA EL VIDEO
+                  ▶ EL RUBIAZO EN VIVO
                 </span>
               </div>
 
@@ -280,35 +292,49 @@ export default async function HomePage() {
                 />
               </svg>
 
-              {/* Inline ¡INCREÍBLE! sticker above the headline */}
+              {/* Inline ¡ÚLTIMA HORA! sticker above the headline */}
               <span
-                className="hidden md:inline-block font-display italic text-xl lg:text-2xl px-4 py-1.5 rounded-full mb-3 select-none"
+                className="hidden md:inline-flex items-center gap-2 font-display italic text-xl lg:text-2xl px-4 py-1.5 rounded-full mb-3 select-none"
                 style={{
-                  color: "#000",
-                  background: "#B6FF5C",
+                  color: "#FFFFFF",
+                  background: "#D40000",
                   transform: "rotate(-3deg)",
                   border: "4px solid #000",
                   boxShadow: "5px 5px 0 #000",
+                  WebkitTextStroke: "1px #000",
                 }}
               >
-                ¡INCREÍBLE!
+                <span
+                  className="inline-block w-3 h-3 rounded-full"
+                  style={{ background: "#FFFFFF", boxShadow: "0 0 0 2px #000" }}
+                  aria-hidden
+                />
+                ¡ÚLTIMA HORA!
               </span>
               <h1
                 className="font-display italic uppercase leading-[0.85] tracking-tight"
                 style={{
-                  fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
+                  fontSize: "clamp(2.3rem, 6.4vw, 5rem)",
                   color: "#FFFFFF",
                   WebkitTextStroke: "3px #000",
                   textShadow: "6px 6px 0 #000",
                   transform: "rotate(-1deg)",
                 }}
               >
-                ¡WILL NO SE
-                <br />
-                CORTA EL PELO!
+                ¡WILL ABANDONA EL RETO
+                <br />Y SE TIÑE DE{" "}
+                <span
+                  style={{
+                    color: BLONDE,
+                    WebkitTextStroke: "3px #000",
+                    textShadow: "6px 6px 0 #000",
+                  }}
+                >
+                  RUBIO!
+                </span>
               </h1>
 
-              {/* Day counter inline in hero */}
+              {/* Day counter inline in hero — FROZEN at the final record */}
               <div className="mt-4 md:mt-6">
                 <p
                   className="font-display italic text-2xl md:text-3xl"
@@ -318,12 +344,27 @@ export default async function HomePage() {
                     textShadow: "3px 3px 0 #000",
                   }}
                 >
-                  ¡DÍA
+                  SE RINDIÓ EN EL DÍA
                 </p>
-                <ThumbnailDaysCounter
-                  promiseDateIso={PROMISE_DATE.toISOString()}
-                  fontSize="clamp(4.5rem, 12vw, 9rem)"
-                />
+                <div className="relative inline-block">
+                  <ThumbnailDaysCounter
+                    promiseDateIso={PROMISE_DATE.toISOString()}
+                    frozenDays={FINAL_DAYS}
+                    fontSize="clamp(4.5rem, 12vw, 9rem)"
+                  />
+                  {/* "RÉCORD FINAL" stamp */}
+                  <span
+                    className="absolute -top-2 -right-4 md:-right-10 font-display italic text-xs md:text-sm px-3 py-1 rounded-full border-4 border-black z-30 whitespace-nowrap"
+                    style={{
+                      background: BLONDE,
+                      color: "#000",
+                      transform: "rotate(8deg)",
+                      boxShadow: "3px 3px 0 #000",
+                    }}
+                  >
+                    RÉCORD FINAL
+                  </span>
+                </div>
                 <p
                   className="font-display italic text-xl md:text-2xl -mt-1"
                   style={{
@@ -332,7 +373,7 @@ export default async function HomePage() {
                     textShadow: "3px 3px 0 #000",
                   }}
                 >
-                  SIN CORTAR EL PELO!
+                  ¡Y SIN CORTÁRSELO!
                 </p>
               </div>
 
@@ -344,11 +385,12 @@ export default async function HomePage() {
                   textShadow: "3px 3px 0 #000",
                 }}
               >
-                Hasta que el{" "}
+                Will tiró la toalla en el día 128. ¿Lo más fuerte? NO se cortó ni
+                un pelo: se lo tiñó de{" "}
                 <span
                   className="inline-block font-display italic text-lg md:text-xl px-3 py-0.5 rounded-lg border-[3px] border-black align-middle tracking-[0.08em]"
                   style={{
-                    background: "#FFFFFF",
+                    background: BLONDE,
                     color: "#000000",
                     transform: "rotate(-2deg)",
                     boxShadow: "3px 3px 0 #000",
@@ -356,13 +398,13 @@ export default async function HomePage() {
                     textShadow: "none",
                   }}
                 >
-                  REAL MADRID
+                  RUBIO PLATINO
                 </span>{" "}
-                gane{" "}
+                por{" "}
                 <span
                   className="inline-block font-display italic text-lg md:text-xl px-3 py-0.5 rounded-lg border-[3px] border-black align-middle tracking-[0.08em]"
                   style={{
-                    background: "#7CFC4D",
+                    background: "#FFFFFF",
                     color: "#000000",
                     transform: "rotate(1.5deg)",
                     boxShadow: "3px 3px 0 #000",
@@ -370,29 +412,95 @@ export default async function HomePage() {
                     textShadow: "none",
                   }}
                 >
-                  5 PARTIDOS SEGUIDOS
-                </span>{" "}
-                sin que les piten un{" "}
+                  OTRA APUESTA
+                </span>
+                . La condición del{" "}
                 <span
                   className="inline-block font-display italic text-lg md:text-xl px-3 py-0.5 rounded-lg border-[3px] border-black align-middle tracking-[0.08em]"
                   style={{
-                    background: "#FFFFFF",
-                    color: "#D40000",
+                    background: "#7CFC4D",
+                    color: "#000000",
                     transform: "rotate(-1.5deg)",
                     boxShadow: "3px 3px 0 #000",
-                    WebkitTextStroke: "0.5px #D40000",
+                    WebkitTextStroke: "0.5px #000",
                     textShadow: "none",
                   }}
                 >
-                  PENALTI A FAVOR DEL REAL MADRID
-                </span>
-                .
+                  REAL MADRID
+                </span>{" "}
+                (5 seguidas sin penalti a favor) jamás se cumplió: se rindió
+                antes.
               </p>
             </div>
           </div>
         </section>
 
-        {/* STREAK card */}
+        {/* PLOT TWIST — ¿qué pasó? */}
+        <section className="mt-16 md:mt-24 flex justify-center">
+          <div
+            className="relative border-[6px] border-black rounded-3xl px-7 md:px-10 py-9 md:py-11 max-w-3xl transform rotate-1"
+            style={{
+              background:
+                "linear-gradient(135deg, #FFE680 0%, #FFD93D 55%, #F2B705 100%)",
+              boxShadow: "12px 12px 0 #000",
+            }}
+          >
+            {/* corner sticker */}
+            <span
+              className="absolute -top-5 -left-3 font-display italic text-sm md:text-base px-3 py-1 rounded-full border-4 border-black z-30"
+              style={{
+                background: "#D40000",
+                color: "#FFFFFF",
+                transform: "rotate(-10deg)",
+                boxShadow: "3px 3px 0 #000",
+                WebkitTextStroke: "0.5px #000",
+              }}
+            >
+              ¡PLOT TWIST!
+            </span>
+            <h2
+              className="font-display italic text-4xl md:text-6xl text-center"
+              style={{
+                color: "#000000",
+                transform: "rotate(-1deg)",
+              }}
+            >
+              ¿QUÉ PASÓ?
+            </h2>
+            <p className="font-body text-sm md:text-base text-black/85 text-center mt-4 leading-relaxed max-w-2xl mx-auto font-semibold">
+              ¡PLOT TWIST QUE NADIE VIO VENIR! En el día 128, Will dejó morir el
+              reto del Real Madrid… ¡y apareció RUBIO PLATINO! Resulta que aceptó
+              otra apuesta y se tiñó el pelo en vez de cortárselo. La promesa de
+              las 5 victorias seguidas sin penalti se quedó en NADA. Mismo largo
+              de melena, color nuevo, reto a la basura. La tijera jamás lo tocó…
+              pero el tinte sí. ¡INCREÍBLE!
+            </p>
+
+            {/* "días de rubio" mini counter */}
+            <div className="mt-6 flex items-center justify-center gap-3 flex-wrap">
+              <span className="font-display italic text-lg md:text-2xl text-black">
+                YA LLEVA
+              </span>
+              <span
+                className="font-display italic leading-none px-3 py-1 rounded-xl border-4 border-black tabular-nums"
+                style={{
+                  fontSize: "clamp(2.5rem, 8vw, 4rem)",
+                  background: "#000000",
+                  color: BLONDE,
+                  transform: "rotate(-2deg)",
+                  boxShadow: "4px 4px 0 rgba(0,0,0,0.35)",
+                }}
+              >
+                {daysRubio}
+              </span>
+              <span className="font-display italic text-lg md:text-2xl text-black">
+                DÍAS DE RUBIO
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* STREAK card — reto cancelado */}
         <section className="mt-16 md:mt-24 flex justify-center">
           <div
             className="relative border-[6px] border-black rounded-3xl px-8 md:px-12 py-8 md:py-10 transform -rotate-2"
@@ -401,15 +509,29 @@ export default async function HomePage() {
               boxShadow: "12px 12px 0 #000",
             }}
           >
-            <p
+            <h2
               className="font-display italic text-2xl md:text-3xl text-center"
               style={{
                 color: "#FFFFFF",
                 WebkitTextStroke: "1px #000",
               }}
             >
-              ¡RACHA ACTUAL!
-            </p>
+              ¡RETO CANCELADO!
+            </h2>
+            <div className="flex justify-center mt-2">
+              <span
+                className="inline-block font-display italic text-sm md:text-base px-3 py-1 rounded-full border-4 border-black"
+                style={{
+                  background: "#D40000",
+                  color: "#FFFFFF",
+                  transform: "rotate(-2deg)",
+                  boxShadow: "3px 3px 0 #000",
+                  WebkitTextStroke: "0.5px #000",
+                }}
+              >
+                ✗ NUNCA LLEGÓ A 5
+              </span>
+            </div>
             <div className="flex items-baseline gap-2 justify-center mt-2">
               <span
                 className="font-display italic text-black"
@@ -419,7 +541,7 @@ export default async function HomePage() {
                   WebkitTextStroke: "3px #000",
                 }}
               >
-                {streak}
+                {displayStreak}
               </span>
               <span className="font-display italic text-4xl md:text-6xl text-black/70">
                 /5
@@ -431,27 +553,26 @@ export default async function HomePage() {
                   key={i}
                   className="w-8 h-8 md:w-10 md:h-10 rounded-full border-4 border-black flex items-center justify-center text-lg"
                   style={
-                    i < streak
+                    i < displayStreak
                       ? { background: "#08401C", color: "#B6FF5C" }
                       : { background: "#FFFFFF", color: "#000" }
                   }
                   aria-hidden
                 >
-                  {i < streak ? "✓" : "✗"}
+                  {i < displayStreak ? "✓" : "✗"}
                 </span>
               ))}
             </div>
-            <p className="font-body text-sm text-black text-center mt-4 font-bold uppercase">
-              {remaining > 0
-                ? `¡FALTAN ${remaining} VICTORIAS!`
-                : "¡PROMESA CUMPLIDA!"}
+            <p className="font-body text-xs md:text-sm text-black text-center mt-4 font-bold uppercase leading-snug max-w-xs mx-auto">
+              Se congeló en el día 128. El Madrid nunca encadenó las 5 sin
+              penalti… ¡adiós reto, hola rubio!
             </p>
             {/* Corner sticker */}
             <span
               className="absolute -top-4 -right-4 text-white font-display italic px-3 py-1 rounded-full border-4 border-black text-sm"
-              style={{ background: "#08401C", transform: "rotate(15deg)" }}
+              style={{ background: "#D40000", transform: "rotate(15deg)" }}
             >
-              ¡HOY!
+              ✗ ABANDONADO
             </span>
           </div>
         </section>
@@ -468,7 +589,7 @@ export default async function HomePage() {
                 transform: "rotate(-1deg)",
               }}
             >
-              ¡LOS ÚLTIMOS 6!
+              ¡LOS PARTIDOS QUE NO BASTARON!
             </h2>
             <span
               className="inline-flex items-center gap-2 font-display italic text-xs md:text-sm px-3 py-1 rounded-full border-4 border-black"
@@ -491,10 +612,10 @@ export default async function HomePage() {
               style={{ background: "#7CFC4D", boxShadow: "8px 8px 0 #000" }}
             >
               <p className="font-display italic text-2xl text-black">
-                ¡AÚN NO HAY PARTIDOS!
+                ¡NO HAY PARTIDOS QUE MOSTRAR!
               </p>
               <p className="font-body text-sm text-black mt-2">
-                Esperando al primer partido desde la promesa...
+                No pudimos cargar los partidos del Madrid ahora mismo.
               </p>
             </div>
           ) : (
