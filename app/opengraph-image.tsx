@@ -139,7 +139,7 @@ export default function OGImage() {
                 boxShadow: "3px 3px 0 #000",
               }}
             >
-              NUNCA SE CORTÓ
+              SE LO CORTÓ
             </div>
             <div
               style={{

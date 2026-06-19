@@ -2,8 +2,8 @@
 // hasta que el Real Madrid gane 5 partidos seguidos sin penalti a favor.
 export const PROMISE_DATE = new Date("2026-02-01T00:00:00Z");
 
-// Fecha en la que Will ABANDONÓ el reto: no se lo cortó, se lo tiñó de
-// rubio por otra apuesta. Coincide con el día 128 desde la promesa.
+// Fecha en la que Will ABANDONÓ el reto: se cortó el pelo (terminando el
+// reto) y se lo tiñó de rubio por otra apuesta. Día 128 desde la promesa.
 export const ABANDON_DATE = new Date("2026-06-09T00:00:00Z");
 
 // Días que aguantó Will antes de rendirse (récord final, ya congelado).

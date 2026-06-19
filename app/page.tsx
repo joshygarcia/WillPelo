@@ -55,7 +55,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: `Will abandona el reto del pelo en el día ${days} y se tiñe de rubio`,
-    description: `Tras ${days} días sin cortarse el pelo, Will de Los Futbolitos abandonó el reto y se tiñó de rubio por otra apuesta. La condición del Real Madrid (5 victorias seguidas sin penalti a favor) nunca llegó a cumplirse.`,
+    description: `Tras ${days} días sin cortarse el pelo, Will de Los Futbolitos se rindió: se cortó el pelo y se lo tiñó de rubio por otra apuesta. La condición del Real Madrid (5 victorias seguidas sin penalti a favor) nunca llegó a cumplirse.`,
     url: "https://www.willnosecortaelpelo.com",
     inLanguage: "es",
     isPartOf: {
@@ -67,7 +67,7 @@ export default async function HomePage() {
       "@type": "Thing",
       name: "Reto del Pelo de Will — Real Madrid (abandonado)",
       description:
-        "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid ganara 5 partidos seguidos sin penalti a favor. Se rindió en el día 128 y, en vez de cortárselo, se tiñó de rubio por otra apuesta.",
+        "Will de Los Futbolitos prometió no cortarse el pelo hasta que el Real Madrid ganara 5 partidos seguidos sin penalti a favor. Se rindió en el día 128: se cortó el pelo y se lo tiñó de rubio por otra apuesta.",
     },
   };
 
@@ -373,7 +373,7 @@ export default async function HomePage() {
                     textShadow: "3px 3px 0 #000",
                   }}
                 >
-                  ¡Y SIN CORTÁRSELO!
+                  ¡Y SE LO CORTÓ!
                 </p>
               </div>
 
@@ -385,8 +385,8 @@ export default async function HomePage() {
                   textShadow: "3px 3px 0 #000",
                 }}
               >
-                Will tiró la toalla en el día 128. ¿Lo más fuerte? NO se cortó ni
-                un pelo: se lo tiñó de{" "}
+                Will tiró la toalla en el día 128: se cortó el pelo y encima se
+                lo tiñó de{" "}
                 <span
                   className="inline-block font-display italic text-lg md:text-xl px-3 py-0.5 rounded-lg border-[3px] border-black align-middle tracking-[0.08em]"
                   style={{
@@ -469,11 +469,10 @@ export default async function HomePage() {
             </h2>
             <p className="font-body text-sm md:text-base text-black/85 text-center mt-4 leading-relaxed max-w-2xl mx-auto font-semibold">
               ¡PLOT TWIST QUE NADIE VIO VENIR! En el día 128, Will dejó morir el
-              reto del Real Madrid… ¡y apareció RUBIO PLATINO! Resulta que aceptó
-              otra apuesta y se tiñó el pelo en vez de cortárselo. La promesa de
-              las 5 victorias seguidas sin penalti se quedó en NADA. Mismo largo
-              de melena, color nuevo, reto a la basura. La tijera jamás lo tocó…
-              pero el tinte sí. ¡INCREÍBLE!
+              reto del Real Madrid: se cortó el pelo… ¡y encima apareció RUBIO
+              PLATINO! Resulta que aceptó otra apuesta y se tiñó el nuevo corte.
+              La promesa de las 5 victorias seguidas sin penalti se quedó en
+              NADA. Tijeretazo, color nuevo y reto a la basura. ¡INCREÍBLE!
             </p>
 
             {/* "días de rubio" mini counter */}

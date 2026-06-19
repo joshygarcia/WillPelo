@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     template: "%s | El Pelo de Will",
   },
   description:
-    "BOMBAZO: Will tiró la toalla en el día 128 SIN cortarse el pelo. Se tiñó de RUBIO por otra apuesta y el reto del Real Madrid nunca se cumplió. ¡Mira el video!",
+    "BOMBAZO: Will tiró la toalla en el día 128: se cortó el pelo y se lo tiñó de RUBIO por otra apuesta. El reto del Real Madrid nunca se cumplió. ¡Mira el video!",
   keywords: [
     "Will rubio",
     "Will abandona el reto",
@@ -59,14 +59,14 @@ export const metadata: Metadata = {
     siteName: "El Pelo de Will",
     title: "¡WILL ABANDONA EL RETO! — Día 128, ahora es RUBIO",
     description:
-      "Will tiró la toalla en el día 128 sin cortarse el pelo: se tiñó de rubio por otra apuesta. El reto del Real Madrid nunca se cumplió. ¡Mira el video!",
+      "Will tiró la toalla en el día 128: se cortó el pelo y se lo tiñó de rubio por otra apuesta. El reto del Real Madrid nunca se cumplió. ¡Mira el video!",
     // og:image y twitter:image los genera automáticamente app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
     title: "¡WILL ABANDONA EL RETO! — Día 128, ahora es RUBIO",
     description:
-      "Will se rindió en el día 128 sin cortarse el pelo: se tiñó de rubio por otra apuesta. El reto del Real Madrid nunca se cumplió.",
+      "Will se rindió en el día 128: se cortó el pelo y se lo tiñó de rubio por otra apuesta. El reto del Real Madrid nunca se cumplió.",
   },
   robots: {
     index: true,
